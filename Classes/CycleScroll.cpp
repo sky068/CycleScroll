@@ -58,7 +58,7 @@ void CycleScroll::scrollTo(int index, float delay){
         CCLOG("index invalid!");
         return;
     }
-    
+    currentIndex = index;
     Size contentSize = this->getContentSize();
     
     float distance = contentSize.width/2 - this->nodes[index]->getPositionX();
@@ -79,6 +79,7 @@ void CycleScroll::initListener()
     listener->onTouchBegan = CC_CALLBACK_2(CycleScroll::onTouchBegin, this);
     listener->onTouchMoved = CC_CALLBACK_2(CycleScroll::onTouchMove, this);
     listener->onTouchEnded = CC_CALLBACK_2(CycleScroll::onTouchEnd, this);
+    listener->setSwallowTouches(true);
     _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
 }
 
