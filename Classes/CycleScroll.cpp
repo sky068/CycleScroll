@@ -41,7 +41,7 @@ void CycleScroll::initView()
     }
     
     this->initListener();
-    //    this->ScrollTo(0, 0);
+    this->scrollTo(0, 0);
 }
 
 void CycleScroll::setDisplaySize(const cocos2d::Size &size){
@@ -53,15 +53,19 @@ const Size& CycleScroll::getDisplaySize() const{
     return this->disSize;
 }
 
-void CycleScroll::ScrollTo(int index, float delay){
-    if(index < 0 || index >= this->nodes.size())
+void CycleScroll::scrollTo(int index, float delay){
+    if(index < 0 || index >= this->nodes.size()) {
+        CCLOG("index invalid!");
         return;
+    }
     
     Size contentSize = this->getContentSize();
     
     float distance = contentSize.width/2 - this->nodes[index]->getPositionX();
-    for(auto i : this->nodes)
-        i->runAction(MoveBy::create(delay, Vec2(distance, 0)));
+    for(auto i : this->nodes){
+        i->stopAllActions();
+        i->runAction(EaseSineOut::create(MoveBy::create(delay, Vec2(distance, 0))));
+    }
 }
 
 bool CycleScroll::init()

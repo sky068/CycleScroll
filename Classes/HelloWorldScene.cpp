@@ -105,7 +105,6 @@ bool HelloWorld::init()
     CycleScroll* selector = CycleScroll::create(winSize, nodes, nodes[0]->getContentSize().width+20, 1);
     this->addChild(selector);
     
-    
     return true;
 }
 
