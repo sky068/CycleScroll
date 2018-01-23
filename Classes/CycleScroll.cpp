@@ -35,7 +35,7 @@ void CycleScroll::initView()
     unsigned long cnt = this->nodes.size();
     for(int i = 0; i< cnt; i++){
         if(this->nodes[i] != NULL){
-            this->nodes[i]->setPosition(Vec2(this->nodes[i]->getContentSize().width/2 + i * spaceDistance, nodes[i]->getContentSize().height * 1.2));// TODO
+            this->nodes[i]->setPosition(Vec2(this->nodes[i]->getContentSize().width/2 + i * spaceDistance, disSize.height/2));// TODO
             clipNode->addChild(this->nodes[i]);
         }
     }

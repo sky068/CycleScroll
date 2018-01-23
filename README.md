@@ -1,2 +1,4 @@
 # CycleScroll
-Cycle scroll view
+Cycle scroll view.
+
+![](/Users/xujw/Work/cocosProj/CycleScroll/cyclescroll.gif)
