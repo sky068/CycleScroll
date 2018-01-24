@@ -20,7 +20,7 @@ class CycleScroll: public cocos2d::LayerColor
     CycleScroll();
 public:
     static CycleScroll* create(cocos2d::Size &size, std::vector<cocos2d::Node*> nodes, float distance, float minScale = 1.0f);
-    void ScrollTo(int index, float delay);
+    void scrollTo(int index, float delay);
     void setDisplaySize(const cocos2d::Size &size);
     const cocos2d::Size& getDisplaySize() const;
     
@@ -36,7 +36,6 @@ private:
     bool dragging;
     bool autoScrolling;
     float scrollDistance;
-    float startTime;
     cocos2d::Vec2 startPos;
 
     bool onTouchBegin(cocos2d::Touch *touch, cocos2d::Event *unused_event);
