@@ -8,8 +8,7 @@ CycleScroll::CycleScroll():autoScrolling(false),
                             scrollDistance(0),
                             minScale(1),
                             spaceDistance(150),
-                            currentIndex(0),
-                            startTime(0)
+                            currentIndex(0)
 {}
 
 CycleScroll* CycleScroll::create(Size &size, vector<Node*> nodes, float distance, float minScale /*= 1.0f*/)
@@ -86,7 +85,6 @@ void CycleScroll::initListener()
 bool CycleScroll::onTouchBegin(cocos2d::Touch *touch, cocos2d::Event *unused_event){
     dragging = true;
     scrollDistance = 0;
-    startTime = clock();
     startPos = touch->getLocation();
     return true;
 }
@@ -94,37 +92,22 @@ bool CycleScroll::onTouchBegin(cocos2d::Touch *touch, cocos2d::Event *unused_eve
 void CycleScroll::onTouchMove(cocos2d::Touch *touch, cocos2d::Event *unused_event){
     float disX = touch->getDelta().x;
     this->updateNodePosX(disX);
+    this->startPos = touch->getPreviousLocation();
 }
 
 void CycleScroll::onTouchEnd(cocos2d::Touch *touch, cocos2d::Event *unused_event){
-//    float startDistance = touch->getLocation().distance(touch->getStartLocation());
-//
-//    if(startDistance < 10) // click
-//    {
-//
-//    }
-    
     // 处理减速
     dragging = false;
-    auto prePos = touch->getPreviousLocation();
-    auto curPos = touch->getLocation();
-    scrollDistance = curPos.distance(prePos);
-    int direction = curPos.x > startPos.x?1:-1;
+    auto endPos = touch->getLocation();
+    scrollDistance = endPos.distance(startPos);
+    int direction = endPos.x > startPos.x?1:-1;
     
     scrollDistance = scrollDistance <= MAX_SCROLL_SPEED?scrollDistance : MAX_SCROLL_SPEED;
-    scrollDistance = scrollDistance * direction;
-    CCLOG("end:%f, pre:%f", curPos.x, prePos.x);
-    
-    float longDisance = curPos.distance(startPos);
-    float elapsedTime = (clock() - startTime) / 1000; //毫秒
-    CCLOG("long:%f, t:%f", longDisance, elapsedTime);
-    if (elapsedTime < 50 && scrollDistance < 10 && longDisance >= 10){
-        scrollDistance = longDisance<=MAX_SCROLL_SPEED?longDisance:MAX_SCROLL_SPEED;
-        scrollDistance *= direction;
-    }
+    CCLOG("end:%f, start:%f", endPos.x, startPos.x);
     if (fabs(scrollDistance) > MIN_SCROLL_SPEED){
         autoScrolling = true;
     }
+    scrollDistance = scrollDistance * direction;
 }
 
 void CycleScroll::updateNodePosX(float interval){
@@ -141,11 +124,10 @@ void CycleScroll::deaccelerateScrolling(float dt){
         autoScrolling = false;
         return;
     }
-    CCLOG("sc:%f", scrollDistance);
+    CCLOG("scrollDistance:%f", scrollDistance);
     scrollDistance *= 0.95;
     if (fabs(scrollDistance) < MIN_SCROLL_SPEED){
         autoScrolling = false;
-        startTime = 0;
     }
     this->updateNodePosX(scrollDistance);
 }
